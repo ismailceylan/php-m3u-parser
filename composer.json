@@ -1,0 +1,19 @@
+{
+    "name": "iceylan/m3u-parser",
+    "description": "M3U parser for php environments.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Iceylan\\M3uParser\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ismail Ceylan",
+            "email": "ismaillceylan@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
