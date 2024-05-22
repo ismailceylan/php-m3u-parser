@@ -1,6 +1,6 @@
 <?php
 
-namespace Iceylan\PhpStreamDownloader\Contracts;
+namespace Iceylan\M3uParser\Contracts;
 
 interface SegmentContract
 {

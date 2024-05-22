@@ -1,14 +1,17 @@
 <?php
 
-namespace Iceylan\PhpStreamDownloader;
+namespace Iceylan\M3uParser;
 
-class M3U8
+class M3U8 implements \ArrayAccess
 {
 	public array $segments = [];
-	public array $modules =
+	public float $duration = 0;
+	private array $modules =
 	[
-		Modules\ExtM3u::class,
-		Modules\ExtXVersion::class,
+		Modules\M3U::class,
+		Modules\XVersion::class,
+		Modules\XTargetDuration::class,
+		Modules\Inf::class
 	];
 
 	public function __construct( public string $remoteURL )
@@ -16,27 +19,63 @@ class M3U8
 		$this->getSegments(
 			file_get_contents( $this->remoteURL )
 		);
+
+		$this->calculateDuration();
 	}
 
 	public function getSegments( string $raw )
 	{
 		// let's make sure we have everything in a single line
-		$raw = str_replace( ",\n", ", ", $raw );
+		$raw = preg_replace( "/(^|\n)([^\n#][^\n]*)/", ' $2', $raw );
 		$lines = explode( "\n", $raw );
 
 		foreach( $lines as $index => $line )
 		{
-			foreach( $this->modules as $module )
+			foreach( $this->modules as $moduleIndex => $module )
 			{
 				if( $module::test( $line, $index ))
 				{
-					$this->segments[] = new $module( $line );
+					$instance = new $module( $line );
+
+					if( $module::$multiple == false )
+					{
+						unset( $this->modules[ $moduleIndex ]);
+						$this->{ $module::$name } = $instance;
+					}
+					else
+					{
+						$this->segments[] = $instance;
+					}
 				}
 			}
-
-			if( $index > 10 ) break;
 		}
+	}
 
-		var_dump( $this );
+	public function calculateDuration()
+	{
+		foreach( $this->segments as $segment )
+		{
+			$this->duration += $segment->duration;
+		}
+	}
+
+	public function offsetExists( mixed $offset ): bool
+	{
+		return isset( $this->segments[ $offset ]);
+	}
+
+	public function offsetGet( mixed $offset ): mixed
+	{
+		return $this->segments[ $offset ];
+	}
+
+	public function offsetSet( mixed $offset, mixed $value ): void
+	{
+		$this->segments[ $offset ] = $value;
+	}
+
+	public function offsetUnset( mixed $offset ): void
+	{
+		unset( $this->segments[ $offset ]);
 	}
 }
