@@ -2,9 +2,12 @@
 
 namespace Iceylan\M3uParser;
 
+use Closure;
+
 class M3U8 implements \ArrayAccess
 {
 	public array $segments = [];
+	public array $remoteUrlParts = [];
 	public float $duration = 0;
 	private array $modules =
 	[
@@ -14,8 +17,10 @@ class M3U8 implements \ArrayAccess
 		Modules\Inf::class
 	];
 
-	public function __construct( public string $remoteURL )
+	public function __construct( public string $remoteURL, public ?Closure $urlBuilder )
 	{
+		$this->parseUrl();
+
 		$this->getSegments(
 			file_get_contents( $this->remoteURL )
 		);
@@ -35,7 +40,7 @@ class M3U8 implements \ArrayAccess
 			{
 				if( $module::test( $line, $index ))
 				{
-					$instance = new $module( $line );
+					$instance = new $module( $line, $this );
 
 					if( $module::$multiple == false )
 					{
@@ -57,6 +62,16 @@ class M3U8 implements \ArrayAccess
 		{
 			$this->duration += $segment->duration;
 		}
+	}
+
+	public function parseUrl()
+	{
+		$this->remoteUrlParts = $p = parse_url( $this->remoteURL );
+
+		$this->remoteUrlParts[ 'absolute_path' ] = implode(
+			'/',
+			array_slice( explode( '/', trim( trim( $p[ 'path' ]), '/' )), 0, -1 )
+		);
 	}
 
 	public function offsetExists( mixed $offset ): bool
