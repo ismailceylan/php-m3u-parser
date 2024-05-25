@@ -9,11 +9,6 @@ class M3U implements SegmentContract
 {
 	public static string $name = 'M3U';
 	public static bool $multiple = false;
-	
-	public function __construct( string $line )
-	{
-		
-	}
 
 	public static function test( string $line, int $index ): bool
 	{
@@ -28,4 +23,10 @@ class M3U implements SegmentContract
 
 		return $isPassed;
 	}
+	
+	public function __construct( string $line )
+	{
+		
+	}
+
 }
