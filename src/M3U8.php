@@ -37,6 +37,7 @@ class M3U8 implements \ArrayAccess
 			Modules\M3U::class,
 			Modules\XVersion::class,
 			Modules\XTargetDuration::class,
+			Modules\XStreamInf::class,
 			Modules\Inf::class,
 		];
 
