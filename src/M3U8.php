@@ -13,6 +13,7 @@ class M3U8 implements \ArrayAccess
 {
 	public array $remoteUrlParts = [];
 	public float $duration = 0;
+	public bool $isMaster = false;
 	
 
 	public function __construct( public string $remoteURL, public ?Closure $urlBuilder )
@@ -24,6 +25,8 @@ class M3U8 implements \ArrayAccess
 		);
 
 		$this->calculateDuration();
+
+		$this->isMaster = empty( $this->xsegments );
 	}
 
 	public function getSegments( string $raw )
