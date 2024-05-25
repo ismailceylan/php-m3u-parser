@@ -36,20 +36,33 @@ class M3U8 implements \ArrayAccess
 
 		foreach( $lines as $index => $line )
 		{
-			foreach( $this->modules as $moduleIndex => $module )
+			foreach( $modules as $moduleIndex => $module )
 			{
+				if( $module::$multiple )
+				{
+					if( ! property_exists( $this, $module::$place ))
+					{
+						$this->{ $module::$place } = [];
+					}
+				}
+				else
+				{
+					$this->{ $module::$place } = null;
+				}
+				
+
 				if( $module::test( $line, $index ))
 				{
 					$instance = new $module( $line, $this );
 
-					if( $module::$multiple == false )
+					if( $module::$multiple )
 					{
-						unset( $this->modules[ $moduleIndex ]);
-						$this->{ $module::$name } = $instance;
+						$this->{ $module::$place }[] = $instance;
 					}
 					else
 					{
-						$this->segments[] = $instance;
+						$this->{ $module::$place } = $instance;
+						unset( $modules[ $moduleIndex ]);
 					}
 				}
 			}
