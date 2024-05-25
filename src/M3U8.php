@@ -9,13 +9,7 @@ class M3U8 implements \ArrayAccess
 	public array $segments = [];
 	public array $remoteUrlParts = [];
 	public float $duration = 0;
-	private array $modules =
-	[
-		Modules\M3U::class,
-		Modules\XVersion::class,
-		Modules\XTargetDuration::class,
-		Modules\Inf::class
-	];
+	
 
 	public function __construct( public string $remoteURL, public ?Closure $urlBuilder )
 	{
@@ -33,6 +27,14 @@ class M3U8 implements \ArrayAccess
 		// let's make sure we have everything in a single line
 		$raw = preg_replace( "/(^|\n)([^\n#][^\n]*)/", ' $2', $raw );
 		$lines = explode( "\n", $raw );
+
+		$modules =
+		[
+			Modules\M3U::class,
+			Modules\XVersion::class,
+			Modules\XTargetDuration::class,
+			Modules\Inf::class,
+		];
 
 		foreach( $lines as $index => $line )
 		{
