@@ -4,9 +4,13 @@ namespace Iceylan\M3uParser;
 
 use Closure;
 
+/**
+ * It parses an M3U8 playlist.
+ * 
+ * @property array $xsegments
+ */
 class M3U8 implements \ArrayAccess
 {
-	public array $segments = [];
 	public array $remoteUrlParts = [];
 	public float $duration = 0;
 	
@@ -73,7 +77,7 @@ class M3U8 implements \ArrayAccess
 
 	public function calculateDuration()
 	{
-		foreach( $this->segments as $segment )
+		foreach( @$this->xsegments ?? [] as $segment )
 		{
 			$this->duration += $segment->duration;
 		}
@@ -91,21 +95,21 @@ class M3U8 implements \ArrayAccess
 
 	public function offsetExists( mixed $offset ): bool
 	{
-		return isset( $this->segments[ $offset ]);
+		return isset( $this->xsegments[ $offset ]);
 	}
 
 	public function offsetGet( mixed $offset ): mixed
 	{
-		return $this->segments[ $offset ];
+		return $this->xsegments[ $offset ];
 	}
 
 	public function offsetSet( mixed $offset, mixed $value ): void
 	{
-		$this->segments[ $offset ] = $value;
+		$this->xsegments[ $offset ] = $value;
 	}
 
 	public function offsetUnset( mixed $offset ): void
 	{
-		unset( $this->segments[ $offset ]);
+		unset( $this->xsegments[ $offset ]);
 	}
 }

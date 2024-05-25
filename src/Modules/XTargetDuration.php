@@ -6,7 +6,7 @@ use Iceylan\M3uParser\Contracts\SegmentContract;
 
 class XTargetDuration implements SegmentContract
 {
-	public static string $name = 'XTargetDuration';
+	public static string $place = 'xduration';
 	public static bool $multiple = false;
 	public float $duration = 0.0;
 

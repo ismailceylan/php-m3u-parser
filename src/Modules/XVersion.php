@@ -6,7 +6,7 @@ use Iceylan\M3uParser\Contracts\SegmentContract;
 
 class XVersion implements SegmentContract
 {
-	public static string $name = 'XVersion';
+	public static string $place = 'xversion';
 	public static bool $multiple = false;
 	public ?int $version = null;
 

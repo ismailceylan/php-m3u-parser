@@ -7,7 +7,7 @@ use Iceylan\M3uParser\Exceptions\InvalidFileFormatException;
 
 class M3U implements SegmentContract
 {
-	public static string $name = 'M3U';
+	public static string $place = 'm3u';
 	public static bool $multiple = false;
 
 	public static function test( string $line, int $index ): bool

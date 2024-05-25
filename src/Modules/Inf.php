@@ -7,7 +7,7 @@ use Iceylan\M3uParser\M3U8;
 
 class Inf implements SegmentContract
 {
-	public static string $name = 'Inf';
+	public static string $place = 'xsegments';
 	public static bool $multiple = true;
 	public float $duration = 0;
 	public ?string $url = null;
