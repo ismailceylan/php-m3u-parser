@@ -3,12 +3,13 @@
 namespace Iceylan\M3uParser\Modules;
 
 use Iceylan\M3uParser\Contracts\SegmentContract;
+use Iceylan\M3uParser\Duration;
 
 class XTargetDuration implements SegmentContract
 {
 	public static string $place = 'xduration';
 	public static bool $multiple = false;
-	public float $duration = 0.0;
+	public Duration $duration;
 
 	public static function test( string $line, int $lineNumber ): bool
 	{
@@ -17,6 +18,6 @@ class XTargetDuration implements SegmentContract
 
 	public function __construct( string $line )
 	{
-		$this->duration = (float) explode( ':', $line )[ 1 ];
+		$this->duration = new Duration( explode( ':', $line )[ 1 ]);
 	}
 }
