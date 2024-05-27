@@ -21,12 +21,24 @@ class M3U8 implements \ArrayAccess
 		$this->parseUrl();
 
 		$this->getSegments(
-			file_get_contents( $this->remoteURL )
+			$this->downloadM3UFile( $this->remoteURL )
 		);
 
 		$this->calculateDuration();
 
 		$this->isMaster = empty( $this->xsegments );
+	}
+
+	public function downloadM3UFile( string $url ): string
+	{
+		$content = @file_get_contents( $url );
+
+		if( $content === false )
+		{
+			throw new \Exception( 'M3U file could not be downloaded!' );
+		}
+
+		return $content;
 	}
 
 	public function getSegments( string $raw )
