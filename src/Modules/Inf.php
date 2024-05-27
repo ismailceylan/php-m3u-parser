@@ -2,9 +2,10 @@
 
 namespace Iceylan\M3uParser\Modules;
 
-use Iceylan\M3uParser\Contracts\SegmentContract;
-use Iceylan\M3uParser\Duration;
 use Iceylan\M3uParser\M3U8;
+use Iceylan\M3uParser\Duration;
+use Iceylan\M3uParser\Support\Helper;
+use Iceylan\M3uParser\Contracts\SegmentContract;
 
 class Inf implements SegmentContract
 {
@@ -24,9 +25,6 @@ class Inf implements SegmentContract
 		$infPart = explode( ':', $parts[ 0 ]);
 
 		$this->duration = new Duration( $infPart[ 1 ]);
-
-		$this->url = $m3u8->urlBuilder !== null
-			? ( $m3u8->urlBuilder )( $m3u8->remoteUrlParts, $parts[ 1 ])
-			: $parts[ 1 ];
+		$this->url = Helper::normalizeURL( $parts[ 1 ], $m3u8 );
 	}
 }

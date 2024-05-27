@@ -13,14 +13,11 @@ class M3U8 implements \ArrayAccess
 {
 	public Duration $duration;
 	public bool $isMaster = false;
-	public array $remoteUrlParts = [];
 
-	public function __construct( public string $remoteURL, public ?Closure $urlBuilder )
+	public function __construct( public string $url )
 	{
-		$this->parseUrl();
-
 		$this->getSegments(
-			$this->downloadM3UFile( $this->remoteURL )
+			$this->downloadM3UFile( $this->url )
 		);
 
 		$this->calculateDuration();
@@ -102,16 +99,6 @@ class M3U8 implements \ArrayAccess
 		{
 			$this->duration->add( $segment->duration );
 		}
-	}
-
-	public function parseUrl()
-	{
-		$this->remoteUrlParts = $p = parse_url( $this->remoteURL );
-
-		$this->remoteUrlParts[ 'absolute_path' ] = implode(
-			'/',
-			array_slice( explode( '/', trim( trim( $p[ 'path' ]), '/' )), 0, -1 )
-		);
 	}
 
 	public function offsetExists( mixed $offset ): bool
