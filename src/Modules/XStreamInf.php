@@ -2,14 +2,16 @@
 
 namespace Iceylan\M3uParser\Modules;
 
-use Iceylan\M3uParser\Bandwidth;
-use Iceylan\M3uParser\Contracts\SegmentContract;
 use Iceylan\M3uParser\M3U8;
+use Iceylan\M3uParser\Bandwidth;
+use Iceylan\M3uParser\Resolution;
+use Iceylan\M3uParser\Contracts\SegmentContract;
 
 class XStreamInf implements SegmentContract
 {
 	public ?M3U8 $m3u;
 	public Bandwidth $bandwidth;
+	public Resolution $resolution;
 	public array $info = [];
 	public static bool $multiple = true;
 	public static string $place = "xstreams";
@@ -33,5 +35,6 @@ class XStreamInf implements SegmentContract
 
 		$this->m3u = new M3U8( $uri, $parent->urlBuilder );
 		$this->bandwidth = new Bandwidth( $this->info[ 'BANDWIDTH' ]);
+		$this->resolution = new Resolution( $this->info[ 'RESOLUTION' ]);
 	}
 }
