@@ -48,19 +48,8 @@ class M3U8 implements \ArrayAccess
 		{
 			foreach( $modules as $moduleIndex => $module )
 			{
-				if( $module::$multiple )
-				{
-					if( ! property_exists( $this, $module::$place ))
-					{
-						$this->{ $module::$place } = [];
-					}
-				}
-				else
-				{
-					$this->{ $module::$place } = null;
-				}
+				$this->initModulePlaceholder( $module );
 				
-
 				if( $module::test( $line, $index ))
 				{
 					$instance = new $module( $line, $this );
@@ -76,6 +65,21 @@ class M3U8 implements \ArrayAccess
 					}
 				}
 			}
+		}
+	}
+
+	private function initModulePlaceholder( $module ): void
+	{
+		if( $module::$multiple )
+		{
+			if( ! property_exists( $this, $module::$place ))
+			{
+				$this->{ $module::$place } = [];
+			}
+		}
+		else
+		{
+			$this->{ $module::$place } = null;
 		}
 	}
 
