@@ -101,6 +101,36 @@ class M3U8 implements \ArrayAccess
 		}
 	}
 
+	public function __toString()
+	{
+		// dd( $this);
+		if( $this->isMaster )
+		{
+
+		}
+
+		$segments = array_map( function( $segment )
+		{
+			$path = explode( '/', parse_url( $segment->url )[ 'path' ]);
+			$filename = array_pop( $path );
+
+			return "#EXTINF:{$segment->duration->seconds},\r\n{$filename}";
+		}, $this->xsegments );
+
+		$segments = implode( "\r\n", $segments );
+
+		return <<<M3U
+		#EXTM3U
+		#EXT-X-TARGETDURATION:{$this->xduration->duration->seconds}
+		#EXT-X-ALLOW-CACHE:YES
+		#EXT-X-PLAYLIST-TYPE:VOD
+		#EXT-X-VERSION:{$this->xversion->version}
+		#EXT-X-MEDIA-SEQUENCE:1
+		$segments
+		#EXT-X-ENDLIST
+		M3U;
+	}
+
 	public function offsetExists( mixed $offset ): bool
 	{
 		return isset( $this->xsegments[ $offset ]);
